@@ -8,32 +8,34 @@ import time
 PORT = 'COM6'          # STM32 COM port
 BAUD = 115200          # UART baud rate
 BUFFER_SIZE = 256      # number of samples per trial
-FS = 8000              # sampling rate in Hz (set to STM32 timer rate)
-THRESHOLD = 1000       # threshold for duration calculation
+FS = 5000              # sampling rate in Hz (set to STM32 timer rate)
+THRESHOLD = 2000       # threshold for duration calculation
 DELAY = 1.5            # seconds to wait before next trial
 
 # --- Classification thresholds ---
-CENTROID_THRESHOLD = 950   # Hz, separates 10 cm vs 30 cm distance
-RMS_THRESHOLD = 300        # separates height at 10 cm distance
-DECAY_THRESHOLD = -0.034    # separates height at 30 cm distance
+DECAY_THRESHOLD = 0.04    # separates height at 10 and 30 cm height
+RMS_THRESHOLD_10 = 850        # separates height at 10 cm distance
+RMS_THRESHOLD_30 = 880        # separates height at 30 cm distance
+PEAK_THRESHOLD = 2000    # separates height at 10 cm distance
 
 def classify_trial(features):
     centroid = features["SpectralCentroidHz"]
     rms = features["RMS"]
     decay = features["DecayRate"]
+    peak = features["Peak"]
 
     # Step 1: distance
-    if centroid < CENTROID_THRESHOLD:
+    if decay <= DECAY_THRESHOLD:
         distance = "D10"
         # Step 2: height (use RMS)
-        if rms < RMS_THRESHOLD:
+        if rms < RMS_THRESHOLD_10:
             height = "H10"
         else:
             height = "H30"
     else:
         distance = "D30"
         # Step 2: height (use DecayRate)
-        if decay < DECAY_THRESHOLD:
+        if rms < RMS_THRESHOLD_30:
             height = "H10"
         else:
             height = "H30"

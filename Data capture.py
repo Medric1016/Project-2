@@ -9,7 +9,7 @@ PORT = 'COM6'          # STM32 COM port
 BAUD = 115200          # UART baud rate
 BUFFER_SIZE = 256      # number of samples per trial
 FS = 5000              # sampling rate in Hz (set to STM32 timer rate)
-THRESHOLD = 1000       # threshold for duration calculation
+THRESHOLD = 2000       # threshold for duration calculation
 DELAY = 1.5            # seconds to wait before next trial
 
 # --- Serial setup ---
@@ -94,7 +94,7 @@ except KeyboardInterrupt:
 finally:
     if all_trials:
         df = pd.DataFrame(all_trials)
-        save_path = r"C:\Users\yapzy\OneDrive\Year 4 Sem 1\TRC3500\Project 2\adc_trials_two.xlsx"
+        save_path = r"C:\Users\yapzy\OneDrive\Year 4 Sem 1\TRC3500\Project 2\adc_testing.xlsx"
         df.to_excel(save_path, index=False)
         print("Data saved to:", save_path)
     ser.close()
